@@ -28,10 +28,26 @@ def generadorContrasena():
     longitud = pedirLongitud()
     minusculas = pedirMinusculas()
     mayusculas = pedirMayusculas()
+    simbolos = pedirSimbolos()
+    numeros = pedirNumeros()
+    seguridad = 0
+    if int(longitud) < 8:
+        print(color('Su contraseña tiene menos de 8 caracteres, se recomienda por su seguridad que '
+                    'tenga más de 8 caracteres. ¿Desea continuar o modificarla?', 'red'))
+        print(color('1. Modificar\n2. Continuar'))
+        opcion = input()
+        if opcion == "1":
+            longitud = pedirLongitud()
+        elif opcion == "2":
+            pass
+        else:
+            print()
 
 
-def pedirMayusculas():
-    print(color('¿Quieres que tu contraseña contenga minisuculas? (si o no)', 'green'))
+def contrasen a
+
+def pedirNumeros():
+    print(color('¿Quieres que tu contraseña contenga números? (si o no)', 'green'))
     respuesta = input()
     if respuesta.lower() == "si":
         return True
@@ -39,7 +55,34 @@ def pedirMayusculas():
         return False
     else:
         print(color('Por favor introduce si o no...', 'red'))
-        pedirMinusculas()
+        pedirNumeros()
+
+
+
+def pedirSimbolos():
+    print(color('¿Quieres que tu contraseña contenga simbolos? (si o no)', 'green'))
+    respuesta = input()
+    if respuesta.lower() == "si":
+        return True
+    elif respuesta.lower() == "no":
+        return False
+    else:
+        print(color('Por favor introduce si o no...', 'red'))
+        pedirSimbolos()
+
+
+
+
+def pedirMayusculas():
+    print(color('¿Quieres que tu contraseña contenga mayusculas? (si o no)', 'green'))
+    respuesta = input()
+    if respuesta.lower() == "si":
+        return True
+    elif respuesta.lower() == "no":
+        return False
+    else:
+        print(color('Por favor introduce si o no...', 'red'))
+        pedirMayusculas()
 
 
 
