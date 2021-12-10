@@ -32,19 +32,53 @@ def generadorContrasena():
     numeros = pedirNumeros()
     seguridad = 0
     if int(longitud) < 8:
-        print(color('Su contraseña tiene menos de 8 caracteres, se recomienda por su seguridad que '
-                    'tenga más de 8 caracteres. ¿Desea continuar o modificarla?', 'red'))
-        print(color('1. Modificar\n2. Continuar'))
-        opcion = input()
-        if opcion == "1":
-            longitud = pedirLongitud()
-        elif opcion == "2":
-            pass
-        else:
-            print()
+        resultado = contrasenaLongitud()
+        if resultado:
+            longitud = 8
+            seguridad = seguridad + 1
+
+    else:
+        seguridad = seguridad + 1
+    if minusculas:
+        seguridad = seguridad + 1
+    if mayusculas:
+        seguridad = seguridad + 1
+    if simbolos:
+        seguridad = seguridad + 1
+    if numeros:
+        seguridad = seguridad + 1
+    if seguridad <= 2:
+        print(color('Su contraseña es poco segura', 'red'))
+    elif seguridad <= 4:
+        print(color('Su contraseña es de seguridad media', 'green'))
+    else:
+        print(color('Su contraseña es de seguridad alta', 'blue'))
 
 
-def contrasen a
+    crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros)
+
+
+def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
+    listaMinusculas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                       'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    #todo
+    '''Tengo que importar simbolos, mayusculas y numeros. Despues hacer que genere la contaseña'''
+
+
+
+def contrasenaLongitud():
+    print(color('Su contraseña tiene menos de 8 caracteres, se recomienda por su seguridad que '
+                'tenga más de 8 caracteres. ¿Quiere establecerla de 8 caracteres?', 'red'))
+    print(color('1. Modificar\n2. Continuar'))
+    opcion = input()
+    if opcion == "1":
+        return True
+    elif opcion == "2":
+        return False
+    else:
+        print(color('Por favor escoja una opción existente...', 'red'))
+        contrasenaLongitud()
+
 
 def pedirNumeros():
     print(color('¿Quieres que tu contraseña contenga números? (si o no)', 'green'))
