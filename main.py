@@ -1,14 +1,22 @@
 from termcolor import colored as color
+import random
+import re
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 
 def creacionDatos():
     global usuarios
+    global departamentos
     '''
     La logica que he seguido es que si esta lista fuera una base de datos, antes de insertar los datos
     siempre los transformaria a mayusculas para que a la hora de comparar los datos no de problema
     '''
-    usuarios = ["ALEJANDRO", "EKAITZ", "JUAN", "MARIO"]
+    usuarios = [["ALEJANDRO", "A23441ASDF", "MARKETING", "alejandroperez@gmail.com"], ["EKAITZ", "ASEF432Q562ASDF", "VENTAS", "ekaitz@gmail.com"], ["JUAN", "ase4fm349", "COMPRAS", "juanfrancisco@gmail.com"]
+        , ["MARIO", "AS34Rasrg", "ALMACEN", "mariozaton@gmail.com"]]
+    departamentos = ["VENTAS", "COMPRAS", "MARKETING", "ALMACEN", "ADMINISTRACION"]
     inicio()
 
 def inicio():
@@ -18,9 +26,56 @@ def inicio():
         print(color('El nombre de usuario ya existe, pruebe otra vez..', 'red'))
         inicio()
     else:
-        usuarios.append(nombre.upper())
-        print(color('Usuario añadido correctamente', 'green'))
-        generadorContrasena()
+        contrasena = generadorContrasena()
+    departamento = preguntarDpto()
+    email = preguntarEmail()
+    user = [nombre, contrasena, departamento, email]
+    print(color('Usuario añadido correctamente', 'green'))
+
+    usuarios.append(user)
+    print(color('Sus datos son:\n'
+                'Nombre: '+nombre+'\n'
+                'Contraseña: '+contrasena+'\n'
+                'Departamento: '+departamento+'\n'
+                'Email: '+email, 'yellow'))
+
+    print(color('Ahora mismo hay '+str(len(usuarios))+' usuarios', 'purple'))
+    mandarCorreo()
+
+def mandarCorreo():
+    server = smtplib.SMTP(host='host_address', port=your_port)
+    msg = MIMEMultipart()
+
+    message = "Thank you"
+
+def preguntarEmail():
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    print(color('Introduzca su correo electronico', 'green'))
+    email = input()
+    if re.fullmatch(regex, email):
+        print(color('Correo electronico insertado', 'blue'))
+        return email
+    else:
+        print(color('Correo incorrecto, por favor compruebalo', 'red'))
+        preguntarEmail()
+
+
+def preguntarDpto():
+    print(color('Escoge tu nuevo departamento:', 'green'))
+
+    for x in departamentos:
+        print(color(str(departamentos.index(x))+": "+x,'yellow'))
+
+    departamento = input()
+    if departamento.isnumeric():
+        if 4 >= int(departamento) >= 0:
+            return departamentos[int(departamento)]
+        else:
+            print(color("Por favor introduce un departamento valido", 'red'))
+            preguntarDpto()
+
+
+
 
 
 def generadorContrasena():
@@ -55,14 +110,44 @@ def generadorContrasena():
         print(color('Su contraseña es de seguridad alta', 'blue'))
 
 
-    crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros)
+    contrasena = crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros)
+    return contrasena
+
 
 
 def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
+    contrasena = ""
     listaMinusculas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
                        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    #todo
-    '''Tengo que importar simbolos, mayusculas y numeros. Despues hacer que genere la contaseña'''
+    listaMayusculas = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    listaNumeros = ['1','2','3','4','5','6','7','8','9','0']
+    listaSimbolos = ['!','@','#','*','?']
+    listadelistas = []
+    if minusculas:
+        listadelistas.append(listaMinusculas)
+    if mayusculas:
+        listadelistas.append(listaMayusculas)
+    if simbolos:
+        listadelistas.append(listaSimbolos)
+    if numeros:
+        listadelistas.append(listaNumeros)
+    x = 0
+    while x < int(longitud):
+        numeroRandom = random.randint(0, len(listadelistas)-1)
+        numerorandom2 = random.randint(0,len(listadelistas[numeroRandom])-1)
+        contrasena = contrasena + listadelistas[numeroRandom][numerorandom2]
+        x = x +1
+
+    print(color("Su nueva contraseña es = ", 'blue')+color(contrasena, 'red'))
+    return contrasena
+
+
+
+
+
+
+
+
 
 
 
