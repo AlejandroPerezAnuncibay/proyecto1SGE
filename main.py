@@ -34,19 +34,32 @@ def inicio():
 
     usuarios.append(user)
     print(color('Sus datos son:\n'
-                'Nombre: '+nombre+'\n'
-                'Contraseña: '+contrasena+'\n'
-                'Departamento: '+departamento+'\n'
-                'Email: '+email, 'yellow'))
+                'Nombre: '+ nombre+'\n'
+                'Contraseña: '+str(contrasena)+'\n'
+                'Departamento: '+str(departamento)+'\n'
+                'Email: '+ str(email), 'yellow'))
 
-    print(color('Ahora mismo hay '+str(len(usuarios))+' usuarios', 'purple'))
-    mandarCorreo()
+    print(color('Ahora mismo hay '+str(len(usuarios))+' usuarios', 'white'))
+    mandarCorreo(user)
 
-def mandarCorreo():
-    server = smtplib.SMTP(host='host_address', port=your_port)
+def mandarCorreo(user):
+    server = smtplib.SMTP('smtp.gmail.com: 587')
     msg = MIMEMultipart()
 
-    message = "Thank you"
+    message = "Usuario: "+str(user[0])+"\nContraseña: "+str(user[1])+"\nDepartamento: "+str(user[2])
+
+    password = "Jm12345Jm"
+    msg['From'] = "pruebapythonalejandro@gmail.com"
+    msg['To'] = str(user[3])
+    msg['Subject'] = "Informacion creacion usuario"
+    msg.attach(MIMEText(message, 'plain'))
+    server = smtplib.SMTP('smtp.gmail.com: 587')
+    server.starttls()
+    server.login(msg['From'], password)
+    server.sendmail(msg['From'], msg['To'], msg.as_string())
+    print("Se ha enviado correctamente el correo %s:" % (msg['To']))
+    server.quit()
+
 
 def preguntarEmail():
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -154,7 +167,7 @@ def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
 def contrasenaLongitud():
     print(color('Su contraseña tiene menos de 8 caracteres, se recomienda por su seguridad que '
                 'tenga más de 8 caracteres. ¿Quiere establecerla de 8 caracteres?', 'red'))
-    print(color('1. Modificar\n2. Continuar'))
+    print(color('1. Modificar\n2. Continuar', 'red'))
     opcion = input()
     if opcion == "1":
         return True
