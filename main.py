@@ -154,11 +154,15 @@ def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
     if numeros:
         listadelistas.append(listaNumeros)
     x = 0
-    while x < int(longitud):
-        numeroRandom = random.randint(0, len(listadelistas)-1)
-        numerorandom2 = random.randint(0,len(listadelistas[numeroRandom])-1)
-        contrasena = contrasena + listadelistas[numeroRandom][numerorandom2]
-        x = x +1
+    if listadelistas == []:
+        print(color('Su contraseña debe por lo menos contener un tipo de caracter, por favor escoja uno que si', 'red'))
+        return generadorContrasena()
+    else:
+        while x < int(longitud):
+            numeroRandom = random.randint(0, len(listadelistas)-1)
+            numerorandom2 = random.randint(0,len(listadelistas[numeroRandom])-1)
+            contrasena = contrasena + listadelistas[numeroRandom][numerorandom2]
+            x = x +1
 
     print(color("Su nueva contraseña es = ", 'blue')+color(contrasena, 'red'))
     return contrasena
