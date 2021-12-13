@@ -4,6 +4,7 @@ import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import sys
 
 
 
@@ -25,6 +26,9 @@ def inicio():
     if nombre.upper() in usuarios:
         print(color('El nombre de usuario ya existe, pruebe otra vez..', 'red'))
         inicio()
+    elif str.isspace(nombre) or len(nombre)==0:
+        print(color('El nombre no puede estar vacio, pruebe otra vez...', 'red'))
+        inicio()
     else:
         contrasena = generadorContrasena()
     departamento = preguntarDpto()
@@ -42,6 +46,7 @@ def inicio():
     print(color('Ahora mismo hay '+str(len(usuarios))+' usuarios', 'white'))
     mandarCorreo(user)
 
+
 def mandarCorreo(user):
     server = smtplib.SMTP('smtp.gmail.com: 587')
     msg = MIMEMultipart()
@@ -57,8 +62,10 @@ def mandarCorreo(user):
     server.starttls()
     server.login(msg['From'], password)
     server.sendmail(msg['From'], msg['To'], msg.as_string())
-    print("Se ha enviado correctamente el correo %s:" % (msg['To']))
+    mensaje = "Se ha enviado correctamente el correo a %s" % (msg['To'])
+    print(color(str(mensaje), 'blue'))
     server.quit()
+    sys.exit()
 
 
 def preguntarEmail():
@@ -80,12 +87,12 @@ def preguntarDpto():
         print(color(str(departamentos.index(x))+": "+x,'yellow'))
 
     departamento = input()
-    if departamento.isnumeric():
+    if departamento.isnumeric() and len(departamento) != 0 and str.isspace(departamento) == False:
         if 4 >= int(departamento) >= 0:
             return departamentos[int(departamento)]
-        else:
-            print(color("Por favor introduce un departamento valido", 'red'))
-            preguntarDpto()
+
+    print(color("Por favor introduce un departamento valido", 'red'))
+    preguntarDpto()
 
 
 
@@ -94,12 +101,13 @@ def preguntarDpto():
 def generadorContrasena():
     print(color('A continuación generaremos una contraseña..', 'green'))
     longitud = pedirLongitud()
-    minusculas = pedirMinusculas()
-    mayusculas = pedirMayusculas()
-    simbolos = pedirSimbolos()
-    numeros = pedirNumeros()
+    minusculas = pedirdato('minusculas')
+    mayusculas = pedirdato('mayusculas')
+    simbolos = pedirdato('simbolos')
+    numeros = pedirdato('numeros')
     seguridad = 0
-    if int(longitud) < 8:
+
+    if longitud < 8:
         resultado = contrasenaLongitud()
         if resultado:
             longitud = 8
@@ -155,15 +163,6 @@ def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
     return contrasena
 
 
-
-
-
-
-
-
-
-
-
 def contrasenaLongitud():
     print(color('Su contraseña tiene menos de 8 caracteres, se recomienda por su seguridad que '
                 'tenga más de 8 caracteres. ¿Quiere establecerla de 8 caracteres?', 'red'))
@@ -178,8 +177,10 @@ def contrasenaLongitud():
         contrasenaLongitud()
 
 
-def pedirNumeros():
-    print(color('¿Quieres que tu contraseña contenga números? (si o no)', 'green'))
+
+
+def pedirdato(dato):
+    print(color('¿Quieres que tu contraseña contenga '+dato+'? (si o no)', 'green'))
     respuesta = input()
     if respuesta.lower() == "si":
         return True
@@ -187,58 +188,18 @@ def pedirNumeros():
         return False
     else:
         print(color('Por favor introduce si o no...', 'red'))
-        pedirNumeros()
+        pedirdato(dato)
 
-
-
-def pedirSimbolos():
-    print(color('¿Quieres que tu contraseña contenga simbolos? (si o no)', 'green'))
-    respuesta = input()
-    if respuesta.lower() == "si":
-        return True
-    elif respuesta.lower() == "no":
-        return False
-    else:
-        print(color('Por favor introduce si o no...', 'red'))
-        pedirSimbolos()
-
-
-
-
-def pedirMayusculas():
-    print(color('¿Quieres que tu contraseña contenga mayusculas? (si o no)', 'green'))
-    respuesta = input()
-    if respuesta.lower() == "si":
-        return True
-    elif respuesta.lower() == "no":
-        return False
-    else:
-        print(color('Por favor introduce si o no...', 'red'))
-        pedirMayusculas()
-
-
-
-def pedirMinusculas():
-    print(color('¿Quieres que tu contraseña contenga minisuculas? (si o no)', 'green'))
-    respuesta = input()
-    if respuesta.lower() == "si":
-        return True
-    elif respuesta.lower() == "no":
-        return False
-    else:
-        print(color('Por favor introduce si o no...', 'red'))
-        pedirMinusculas()
 
 def pedirLongitud():
     print(color('Introduce la longitud de la contraseña(tiene que ser un numero postivo y entero)', 'green'))
     longitud = input()
-    if longitud.isnumeric:
-        if int(longitud) > 0:
-            return longitud
-        else:
-            print(color('El número introducido es incorrecto, por favor compruebe los requisitos...', 'red'))
-            pedirLongitud()
+    if len(longitud) != 0 and str.isdigit(longitud):
+        if int(longitud) != 0:
+            return int(longitud)
 
+    print(color('El número introducido es incorrecto, por favor compruebe los requisitos...', 'red'))
+    pedirLongitud()
 
 
 if __name__ == '__main__':
