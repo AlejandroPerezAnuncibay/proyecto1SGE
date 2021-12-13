@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 import sys
 
 
-
+#Funcion que se encarga de generar los datos y comenzar la app
 def creacionDatos():
     global usuarios
     global departamentos
@@ -20,6 +20,7 @@ def creacionDatos():
     departamentos = ["VENTAS", "COMPRAS", "MARKETING", "ALMACEN", "ADMINISTRACION"]
     inicio()
 
+#Funcion principal que se encarga de llamar al resto de funciones y de recoger los datos
 def inicio():
     print(color('Introduce el nombre de usuario que desees:', 'green'))
     nombre = input()
@@ -46,7 +47,7 @@ def inicio():
     print(color('Ahora mismo hay '+str(len(usuarios))+' usuarios', 'white'))
     mandarCorreo(user)
 
-
+#Funcion que se encarga de mandar el correo electronico con la informacion generada
 def mandarCorreo(user):
     server = smtplib.SMTP('smtp.gmail.com: 587')
     msg = MIMEMultipart()
@@ -67,7 +68,7 @@ def mandarCorreo(user):
     server.quit()
     sys.exit()
 
-
+#Funcion que se encarga de recoger el correo electronico validado
 def preguntarEmail():
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     print(color('Introduzca su correo electronico', 'green'))
@@ -77,7 +78,7 @@ def preguntarEmail():
         return email
     else:
         print(color('Correo incorrecto, por favor compruebalo', 'red'))
-        preguntarEmail()
+        return preguntarEmail()
 
 
 def preguntarDpto():
@@ -92,7 +93,7 @@ def preguntarDpto():
             return departamentos[int(departamento)]
 
     print(color("Por favor introduce un departamento valido", 'red'))
-    preguntarDpto()
+    return preguntarDpto()
 
 
 
@@ -174,7 +175,7 @@ def contrasenaLongitud():
         return False
     else:
         print(color('Por favor escoja una opción existente...', 'red'))
-        contrasenaLongitud()
+        return contrasenaLongitud()
 
 
 
@@ -188,7 +189,7 @@ def pedirdato(dato):
         return False
     else:
         print(color('Por favor introduce si o no...', 'red'))
-        pedirdato(dato)
+        return pedirdato(dato)
 
 
 def pedirLongitud():
@@ -199,7 +200,7 @@ def pedirLongitud():
             return int(longitud)
 
     print(color('El número introducido es incorrecto, por favor compruebe los requisitos...', 'red'))
-    pedirLongitud()
+    return pedirLongitud()
 
 
 if __name__ == '__main__':
