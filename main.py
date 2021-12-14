@@ -4,8 +4,10 @@ import random
 import re
 import smtplib
 import sys
+import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
 
 
 # Funcion que se encarga de generar los datos y comenzar la app
@@ -16,6 +18,7 @@ def creacionDatos():
     La logica que he seguido es que si esta lista fuera una base de datos, antes de insertar los datos
     siempre los transformaria a mayusculas para que a la hora de comparar los datos no de problema
     '''
+
     usuarios = [["ALEJANDRO", "A23441ASDF", "MARKETING", "alejandroperez@gmail.com"],
                 ["EKAITZ", "ASEF432Q562ASDF", "VENTAS", "ekaitz@gmail.com"],
                 ["JUAN", "ase4fm349", "COMPRAS", "juanfrancisco@gmail.com"]
@@ -37,17 +40,19 @@ def inicio():
     if str.isspace(nombre) or len(nombre) == 0:
         print(color('El nombre no puede estar vacio, pruebe otra vez...', 'red'))
         inicio()
-    else:
-        contrasena = generadorContrasena()
+
+    contrasena = generadorContrasena()
     departamento = preguntarDpto()
     email = preguntarEmail()
-    user = [nombre.upper(), contrasena, departamento, email]
+    contrasenahash = hashlib.sha512(contrasena.encode())
+
+    user = [nombre.upper(), contrasenahash.hexdigest(), departamento, email]
     print(color('Usuario añadido correctamente', 'blue'))
 
     usuarios.append(user)
     print(color('Sus datos son:\n'
                 'Nombre: ' + nombre + '\n'
-                'Contraseña: ' + str(contrasena) + '\n'
+                'Contraseña: ' + contrasena+ '\n'
                 'Departamento: ' + str(departamento) + '\n'
                 'Email: ' + str(email), 'blue'))
 
