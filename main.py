@@ -8,6 +8,7 @@ import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter import *
+from prettytable import PrettyTable
 
 
 
@@ -23,7 +24,12 @@ def creacionDatos():
     La logica que he seguido es que si esta lista fuera una base de datos, antes de insertar los datos
     siempre los transformaria a mayusculas para que a la hora de comparar los datos no de problema
     '''
-
+    global tableUsuario
+    tableUsuario = PrettyTable()
+    tableUsuario.field_names = ["Nombre", "Contraseña", "Email", "Departamento"]
+    global tableUsuarios
+    tableUsuarios = PrettyTable()
+    tableUsuarios.field_names = ["Nombre", "Departamento", "Correo"]
     usuarios = [["ALEJANDRO", "A23441ASDF", "MARKETING", "alejandroperez@gmail.com"],
                 ["EKAITZ", "ASEF432Q562ASDF", "VENTAS", "ekaitz@gmail.com"],
                 ["JUAN", "ase4fm349", "COMPRAS", "juanfrancisco@gmail.com"]
@@ -67,13 +73,15 @@ def inicio():
     print(color('Usuario añadido correctamente', 'blue'))
 
     usuarios.append(user)
-    print(color('Sus datos son:\n'
-                'Nombre: ' + nombre + '\n'
-                'Contraseña: ' + contrasena+ '\n'
-                'Departamento: ' + str(departamento) + '\n'
-                'Email: ' + str(email), 'blue'))
+    tableUsuario.add_row([nombre, contrasena, email, departamento])
+    print(color('Sus datos son:', 'blue'))
+    print(color(tableUsuario, "white"))
+
 
     print(color('Ahora mismo hay ' + str(len(usuarios)) + ' usuarios', 'blue'))
+    for i in usuarios:
+        tableUsuarios.add_row([i[0], i[2], i[3]])
+    print(color(tableUsuarios,"white"))
     mandarCorreo(user)
 
 
@@ -277,9 +285,9 @@ def contrasenaLongitud():
 def pedirdato(dato):
     print(color('¿Quieres que tu contraseña contenga ' + dato + '? (si o no)', 'green'))
     respuesta = input()
-    if respuesta.lower() == "si":
+    if respuesta.lower() == "si" or respuesta.lower() == "s":
         return True
-    elif respuesta.lower() == "no":
+    elif respuesta.lower() == "no" or respuesta.lower() == "n":
         return False
     else:
         print(color('Por favor introduce si o no...', 'red'))
