@@ -7,7 +7,7 @@ import sys
 import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from tkinter import *
 
 
 # Funcion que se encarga de generar los datos y comenzar la app
@@ -24,6 +24,18 @@ def creacionDatos():
                 ["JUAN", "ase4fm349", "COMPRAS", "juanfrancisco@gmail.com"]
         , ["MARIO", "AS34Rasrg", "ALMACEN", "mariozaton@gmail.com"]]
     departamentos = ["VENTAS", "COMPRAS", "MARKETING", "ALMACEN", "ADMINISTRACION"]
+
+    global listaMinusculas
+    global listaMayusculas
+    global listaNumeros
+    global listaSimbolos
+    listaMinusculas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                          'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    listaMayusculas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+                       'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    listaNumeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+    listaSimbolos = ['!', '@', '#', '*', '?']
+
     inicio()
 
 
@@ -45,7 +57,7 @@ def inicio():
     departamento = preguntarDpto()
     email = preguntarEmail()
     contrasenahash = hashlib.sha512(contrasena.encode())
-
+    #Contraseña encriptada mediante el metodo sha512
     user = [nombre.upper(), contrasenahash.hexdigest(), departamento, email]
     print(color('Usuario añadido correctamente', 'blue'))
 
@@ -71,7 +83,7 @@ def mandarCorreo(user):
     password = "Jm12345Jm"
     msg['From'] = "pruebapythonalejandro@gmail.com"
     msg['To'] = str(user[3])
-    msg['Subject'] = "Informacion creacion usuario"
+    msg['Subject'] = "Informacion creación usuario"
     msg.attach(MIMEText(message, 'plain'))
     server = smtplib.SMTP('smtp.gmail.com: 587')
     server.starttls()
@@ -83,7 +95,7 @@ def mandarCorreo(user):
     sys.exit()
 
 
-# Funcion que se encarga de recoger el correo electronico validado
+# Funcion que se encarga de recoger el correo electronico validado, se encarga de validarlo mediante un regex.
 
 def preguntarEmail():
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -121,6 +133,61 @@ tipos haya añadido, sumará 1 punto a seguridad, yendo de menos seguro a más.
 '''
 
 def generadorContrasena():
+    print(color('1. Generar contraseña aleatoriamente\n'
+          '2. Escoger opciones de contraseña', 'blue'))
+    opcion = input()
+    if opcion == "1":
+        contrasena = generarRandom()
+        return contrasena
+    elif opcion == "2":
+        contrasena = contrasenaOpciones()
+        return contrasena
+    else:
+        print(color('Por favor introduce una opción valida...(1 o 2)', 'red'))
+        return generadorContrasena()
+
+
+
+def generarRandom():
+    longitud = random.randint(8,32)
+    listadelistas = [listaMayusculas, listaMinusculas, listaNumeros, listaSimbolos]
+    contrasena = ""
+    for x in range(0,longitud):
+        numrandom = random.randint(0,3)
+        numramdonlista = random.randint(0,len(listadelistas[numrandom]) -1)
+        contrasena = contrasena + listadelistas[numrandom][numramdonlista]
+        seguridad = 0
+    print(color('Su nueva contraseña es: '+ contrasena, 'red'))
+    minusculas = False
+    mayusculas = False
+    simbolos = False
+    numeros = False
+    for y in contrasena:
+        if y in listaMinusculas:
+            minusculas = True
+        elif y in listaMayusculas:
+            mayusculas = True
+        elif y in listaSimbolos:
+            simbolos = True
+        elif y in listaNumeros:
+            numeros = True
+    if minusculas:
+        seguridad = seguridad + 1
+    if mayusculas:
+        seguridad = seguridad + 1
+    if simbolos:
+        seguridad = seguridad + 1
+    if numeros:
+        seguridad = seguridad + 1
+    if seguridad <= 2:
+        print(color('Su contraseña es poco segura', 'red'))
+    elif seguridad <= 4:
+        print(color('Su contraseña es segura', 'green'))
+    return contrasena
+
+
+
+def contrasenaOpciones():
     print(color('A continuación generaremos una contraseña..', 'green'))
     longitud = pedirLongitud()
     minusculas = pedirdato('minusculas')
@@ -164,12 +231,6 @@ longitud del mismo, asi se escogera un array random y un caracter random.
 '''
 def crearContrasena(longitud, minusculas, mayusculas, simbolos, numeros):
     contrasena = ""
-    listaMinusculas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-                       'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    listaMayusculas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-                       'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    listaNumeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
-    listaSimbolos = ['!', '@', '#', '*', '?']
     listadelistas = []
     if minusculas:
         listadelistas.append(listaMinusculas)
